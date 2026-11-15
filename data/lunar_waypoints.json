@@ -1,0 +1,125 @@
+{
+  "lunar_radius_m": 1737400.0,
+  "waypoints": [
+    {
+      "waypoint_id": "WP_MALAPERT_SUMMIT",
+      "name": "Malapert Massif Summit",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -85.9,
+      "longitude_deg": 0.0,
+      "polar_x_m": 0.0,
+      "polar_y_m": -124360.0,
+      "elevation_m": 5120.0
+    },
+    {
+      "waypoint_id": "WP_MALAPERT_BENCH",
+      "name": "Malapert Northern Bench",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -85.75,
+      "longitude_deg": 1.2,
+      "polar_x_m": 2700.0,
+      "polar_y_m": -128900.0,
+      "elevation_m": 4780.0
+    },
+    {
+      "waypoint_id": "WP_MONS_MOUTON_A",
+      "name": "Mons Mouton Mesa Center",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -84.5,
+      "longitude_deg": -31.0,
+      "polar_x_m": -86014.0,
+      "polar_y_m": -143149.0,
+      "elevation_m": 5420.0
+    },
+    {
+      "waypoint_id": "WP_MONS_MOUTON_PLATEAU",
+      "name": "Mons Mouton Step Plateau",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -85.35,
+      "longitude_deg": -33.0,
+      "polar_x_m": -76786.0,
+      "polar_y_m": -118245.0,
+      "elevation_m": 4950.0
+    },
+    {
+      "waypoint_id": "WP_HAWORTH_RIM",
+      "name": "Haworth Crater North Rim",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -87.5,
+      "longitude_deg": -5.0,
+      "polar_x_m": -6610.0,
+      "polar_y_m": -75560.0,
+      "elevation_m": 1250.0
+    },
+    {
+      "waypoint_id": "WP_NOBILE_RIM_1",
+      "name": "Nobile Crater East Rim",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -85.2,
+      "longitude_deg": 53.5,
+      "polar_x_m": 117140.0,
+      "polar_y_m": -86630.0,
+      "elevation_m": 3650.0
+    },
+    {
+      "waypoint_id": "WP_NOBILE_RIM_2",
+      "name": "Nobile Crater South Rim",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -85.8,
+      "longitude_deg": 47.0,
+      "polar_x_m": 93020.0,
+      "polar_y_m": -86750.0,
+      "elevation_m": 3480.0
+    },
+    {
+      "waypoint_id": "WP_DE_GERLACHE_RIM",
+      "name": "de Gerlache Connecting Ridge",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -88.3,
+      "longitude_deg": -68.5,
+      "polar_x_m": -47930.0,
+      "polar_y_m": -18870.0,
+      "elevation_m": 2840.0
+    },
+    {
+      "waypoint_id": "WP_SLATER_PLAIN",
+      "name": "Slater Smooth Plain",
+      "type": "Candidate Landing Site",
+      "latitude_deg": -88.1,
+      "longitude_deg": 115.0,
+      "polar_x_m": 52180.0,
+      "polar_y_m": 24330.0,
+      "elevation_m": 860.0
+    },
+    {
+      "waypoint_id": "WP_CABEUS_COLDTRAP",
+      "name": "Cabeus Water Ice Trap",
+      "type": "Science Target (PSR)",
+      "latitude_deg": -84.9,
+      "longitude_deg": -35.5,
+      "polar_x_m": -90200.0,
+      "polar_y_m": -129400.0,
+      "elevation_m": -3900.0
+    },
+    {
+      "waypoint_id": "WP_SHACKLETON_RIM",
+      "name": "Shackleton Crater Summit Peak",
+      "type": "Science Target",
+      "latitude_deg": -89.9,
+      "longitude_deg": 0.0,
+      "polar_x_m": 0.0,
+      "polar_y_m": -3030.0,
+      "elevation_m": 4200.0
+    },
+    {
+      "waypoint_id": "WP_HAWORTH_PSR_FLOOR",
+      "name": "Haworth Deep Cryogenic Floor",
+      "type": "Science Target (PSR)",
+      "latitude_deg": -87.4,
+      "longitude_deg": -5.1,
+      "polar_x_m": -6740.0,
+      "polar_y_m": -78600.0,
+      "elevation_m": -3800.0
+    }
+  ]
+}
