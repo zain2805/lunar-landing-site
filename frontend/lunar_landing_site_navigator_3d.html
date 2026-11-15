@@ -13,6 +13,13 @@
 @media(max-width:1050px){.sidebar{width:215px}.main{margin-left:215px}.grid-4{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.moon-ball{width:170px;height:170px}}
 @media(max-width:720px){.sidebar{position:sticky;top:0;width:100%;height:auto;inset:auto;padding:10px 12px;display:block;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:0 5px 8px}.brand-mark{width:32px;height:32px}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow:auto;gap:4px}.nav button{width:auto;white-space:nowrap;padding:9px 11px;font-size:10px}.nav .ico{display:none}.main{margin:0;padding:19px 14px 45px}.topbar{margin-bottom:20px}.grid-3,.grid-2{grid-template-columns:1fr}.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-visual{min-height:300px}.moon-ball{width:130px;height:130px;right:-15px;top:70%}.form-grid{grid-template-columns:1fr 1fr}.pill{display:none}}
 @media(max-width:420px){.grid-4{grid-template-columns:1fr 1fr}.card{padding:14px}.form-grid{grid-template-columns:1fr}.metric{font-size:23px}}
+
+/* MISSION DATE & LANDING TIME — shown on every page except the entrance */
+.mission-time{display:grid;grid-template-columns:auto repeat(3,minmax(130px,170px)) 1fr;gap:14px;align-items:end;margin:-10px 0 24px;padding:14px 18px}
+.mission-time .mt-title{font:10px 'DM Mono',monospace;letter-spacing:1.2px;color:var(--cyan);line-height:1.7;padding-bottom:9px}
+.mission-time .mt-count{text-align:right;padding-bottom:3px}.mission-time .mt-count strong{display:block;font:500 15px 'DM Mono',monospace;color:var(--green)}.mission-time .mt-count span{font:9px 'DM Mono',monospace;letter-spacing:1px;color:var(--muted)}
+.mission-time input[type=date],.mission-time input[type=time]{color-scheme:dark}
+@media(max-width:900px){.mission-time{grid-template-columns:1fr 1fr}.mission-time .mt-title,.mission-time .mt-count{grid-column:1/-1;text-align:left}}
 </style>
 
 <style>
@@ -196,6 +203,13 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
  </aside>
  <main class="main">
   <div class="topbar"><div class="crumb">LUNAR OPERATIONS <span style="color:var(--cyan)">/</span> <span id="crumb">DASHBOARD</span></div><div class="top-actions"><span class="pill"><b>●</b> LOCAL INTERFACE ACTIVE</span><button class="icon-btn" id="musicToggle" title="Toggle ambience">♫</button><button class="icon-btn" id="helpBtn" title="Data information">ⓘ</button></div></div>
+  <div class="card mission-time" id="missionTime">
+   <div class="mt-title">MISSION<br>SCHEDULE</div>
+   <div class="field"><label for="ltDate">LANDING DATE</label><input id="ltDate" type="date"></div>
+   <div class="field"><label for="ltTime">LANDING TIME</label><input id="ltTime" type="time" step="60"></div>
+   <div class="field"><label for="ltTz">TIME ZONE</label><select id="ltTz"><option value="utc">UTC</option><option value="local">Local time</option></select></div>
+   <div class="mt-count"><strong id="ltCount">NOT SET</strong><span id="ltSub">ENTER A DATE AND TIME</span></div>
+  </div>
   <section class="page active" id="page-dashboard">
    <div class="hero">
     <div class="card hero-visual"><canvas id="heroStars"></canvas><div class="hero-copy"><div class="eyebrow">LUNAR SOUTH POLE · MISSION OVERVIEW</div><h1>Find the safest path<br>to the lunar surface.</h1><p class="sub">Explore five candidate regions, inspect mission constraints and compare the data required for a future landing-site decision.</p><div class="hero-actions"><button class="btn" data-go="explorer">EXPLORE SITES →</button><button class="btn secondary" data-go="comparison">COMPARE LOCATIONS</button></div></div><div class="moon-ball"></div></div>
@@ -712,6 +726,21 @@ scene.addEventListener('dblclick',()=>{if(fly)return;yaw=-.4;pitch=.5;zoom=1;vya
 window.solarFlyIn=()=>{fly={t0:performance.now(),z0:zoom,p0:pitch,dur:1700}};
 })();
 
+
+/* Mission date & landing time — shared by all pages, remembered in this browser */
+(function(){
+ const g=id=>document.getElementById(id),KEY='lunaNavLandingTime';
+ const d=g('ltDate'),t=g('ltTime'),z=g('ltTz'),c=g('ltCount'),s=g('ltSub');if(!d)return;
+ try{const v=JSON.parse(localStorage.getItem(KEY)||'{}');d.value=v.d||'';t.value=v.t||'';z.value=v.z==='local'?'local':'utc'}catch(e){}
+ function target(){if(!d.value)return null;const tm=t.value||'00:00';const iso=d.value+'T'+tm+(z.value==='utc'?':00Z':':00');const x=new Date(iso);return isNaN(x)?null:x}
+ function pad(n){return String(n).padStart(2,'0')}
+ function tick(){const x=target();if(!x){c.textContent='NOT SET';s.textContent='ENTER A DATE AND TIME';c.style.color='var(--muted)';return}
+  let ms=x-Date.now(),past=ms<0;ms=Math.abs(ms);const dd=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4),sc=Math.floor(ms%6e4/1e3);
+  c.textContent=(past?'T+ ':'T− ')+(dd?dd+'d ':'')+pad(h)+':'+pad(m)+':'+pad(sc);c.style.color=past?'var(--amber)':'var(--green)';
+  s.textContent=(t.value?'':'TIME DEFAULTS TO 00:00 · ')+(z.value==='utc'?x.toISOString().slice(0,16).replace('T',' ')+' UTC':'LOCAL TIME')}
+ function save(){try{localStorage.setItem(KEY,JSON.stringify({d:d.value,t:t.value,z:z.value}))}catch(e){}tick()}
+ [d,t,z].forEach(el=>el.addEventListener('input',save));tick();setInterval(tick,1000);
+})();
 </script>
 </body>
 </html>

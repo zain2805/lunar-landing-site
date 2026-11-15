@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050914">
+<title>Lunar Landing Site Navigator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#050914;--panel:#0b1425;--panel2:#101d32;--line:rgba(133,177,220,.17);
+  --text:#edf5ff;--muted:#91a5bf;--cyan:#59e1f2;--blue:#5b8cff;--purple:#a68bff;
+  --green:#72e3b1;--amber:#ffc875;--red:#ff7f91;--radius:18px;
+  --rocket-bg: url('/*__ROCKET_BG_DATA_URL__*/');
+  --backdrop-opacity: 0.48;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#102345 0%,transparent 38%),var(--bg);color:var(--text);font-family:Manrope,Arial,sans-serif;min-height:100vh}button,input,select{font:inherit}button{cursor:pointer;color:inherit}.mono{font-family:'DM Mono',monospace}.muted{color:var(--muted)}.eyebrow{font:11px 'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}.app{display:none;min-height:100vh;position:relative}.sidebar{position:fixed;inset:0 auto 0 0;width:250px;background:rgba(5,11,23,.92);border-right:1px solid var(--line);padding:24px 16px;z-index:20;display:flex;flex-direction:column;backdrop-filter:blur(20px)}.brand{display:flex;gap:12px;align-items:center;padding:4px 8px 28px}.brand-mark{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#67e8f9,#657cff 65%,#a68bff);display:grid;place-items:center;color:#06101e;font-size:21px;font-weight:900;box-shadow:0 0 25px #4acbe455}.brand strong{font-size:13px;letter-spacing:1.4px;display:block}.brand small{font:9px 'DM Mono';color:var(--muted);letter-spacing:1.5px}.nav-label{font:10px 'DM Mono';color:#637995;letter-spacing:2px;padding:10px 10px}.nav button{border:0;background:transparent;width:100%;padding:12px 13px;text-align:left;color:#9fb1c9;border-radius:11px;margin:2px 0;display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;transition:.2s}.nav button:hover,.nav button.active{background:linear-gradient(90deg,#1a3550,#12243b);color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--cyan)}.nav .ico{width:19px;text-align:center;font-size:16px}.side-bottom{margin-top:auto;border-top:1px solid var(--line);padding:16px 9px 0}.status-dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);margin-right:7px}.side-bottom small{font:10px 'DM Mono';color:var(--muted)}
+.main{margin-left:250px;padding:28px clamp(18px,3vw,46px) 60px;max-width:1800px;position:relative;z-index:2}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:28px}.crumb{font:11px 'DM Mono';color:var(--muted);letter-spacing:1.4px}.top-actions{display:flex;gap:9px;align-items:center}.pill{border:1px solid var(--line);background:#0b1728;border-radius:30px;padding:9px 13px;font:10px 'DM Mono';color:#b8c9dd}.pill b{color:var(--green)}.icon-btn{border:1px solid var(--line);background:#0b1728;border-radius:11px;padding:9px 12px;color:var(--text);display:grid;place-items:center}.icon-btn:hover{border-color:var(--cyan);background:#12233c}.page{display:none;animation:fade .45s ease}.page.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}h1{font-size:clamp(27px,3vw,42px);letter-spacing:-1.8px;margin:8px 0 10px}h2{font-size:20px;letter-spacing:-.5px;margin:0 0 7px}h3{font-size:14px;margin:0 0 8px}.sub{color:var(--muted);font-size:13px;line-height:1.7;max-width:780px}.grid{display:grid;gap:15px}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.card{background:linear-gradient(145deg,rgba(16,30,51,.82),rgba(8,17,31,.90));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:var(--radius);padding:19px;box-shadow:0 12px 35px #0004;min-width:0;position:relative}.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.tag{font:9px 'DM Mono';letter-spacing:1px;border:1px solid var(--line);padding:6px 8px;border-radius:20px;color:var(--muted);white-space:nowrap}.tag.warn{color:var(--amber);border-color:#ffc87555}.tag.good{color:var(--green);border-color:#72e3b155}.metric{font-size:27px;font-weight:800;letter-spacing:-1px}.metric-label{font:10px 'DM Mono';color:var(--muted);letter-spacing:1px;margin-top:5px}.site-card{position:relative;overflow:hidden}.site-card:after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;right:-55px;top:-55px;background:radial-gradient(circle,#61dff522,transparent 70%)}.site-number{font:10px 'DM Mono';color:var(--cyan)}.site-card h3{font-size:17px;margin:10px 0 4px}.coords{font:10px 'DM Mono';color:var(--muted);line-height:1.8}.data-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff0c;font-size:11px}.data-row:last-child{border:0}.data-row span:first-child{color:var(--muted)}.data-row strong{font:11px 'DM Mono';text-align:right}.btn{border:1px solid #5ddff277;background:linear-gradient(110deg,#16425a,#1c3262);border-radius:10px;padding:11px 16px;font-size:11px;font-weight:800;letter-spacing:.6px;transition:.2s;color:#fff}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px #38c9e433}.btn.secondary{background:#0a1728;border-color:var(--line);color:#c3d2e5}.btn.ghost{background:transparent;border-color:var(--line)}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:16px;margin-bottom:17px}.hero-visual{min-height:270px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 65% 55%,#183a64 0%,#0b1c36 35%,#07101e 75%)}.hero-visual canvas{position:absolute;inset:0;width:100%;height:100%}.hero-copy{position:relative;z-index:2;max-width:550px}.hero-copy h1{font-size:clamp(29px,4vw,48px)}.hero-copy .sub{max-width:450px}.hero-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.moon-ball{position:absolute;width:210px;height:210px;border-radius:50%;right:7%;top:50%;transform:translateY(-50%);background:radial-gradient(circle at 32% 30%,#e5e6df,#858b98 35%,#353d50 68%,#10182a 80%);box-shadow:inset -25px -16px 35px #000a,0 0 65px #83c9ff33}.moon-ball:before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 60%,#454d5b 0 5px,transparent 6px),radial-gradient(circle at 65% 32%,#414957 0 11px,transparent 12px),radial-gradient(circle at 54% 70%,#59606b 0 8px,transparent 9px),radial-gradient(circle at 78% 61%,#454d5b 0 5px,transparent 6px);opacity:.8}.chart{width:100%;height:210px;display:block}.chart.tall{height:270px}.map{height:300px;position:relative;overflow:hidden;border-radius:14px;background:radial-gradient(ellipse at 50% 45%,#303b4c,#141d2c 55%,#090f1b);border:1px solid var(--line)}.map:before{content:"";position:absolute;inset:-20%;background:repeating-radial-gradient(ellipse at 50% 50%,transparent 0 28px,#a8c1d01b 29px 30px),linear-gradient(35deg,transparent 40%,#d6dce011 41%,transparent 43%);transform:rotate(-12deg)}.map:after{content:"";position:absolute;width:90%;height:80%;left:5%;top:10%;border-radius:50%;background:radial-gradient(ellipse at 25% 35%,#87909b 0 1%,transparent 1.5%),radial-gradient(ellipse at 70% 65%,#697584 0 2%,transparent 2.5%),radial-gradient(ellipse at 45% 70%,#929ba7 0 1.5%,transparent 2%),radial-gradient(ellipse at 65% 20%,#4c5664 0 3%,transparent 3.5%);opacity:.5}.map-marker{position:absolute;z-index:3;border:0;border-radius:50%;width:15px;height:15px;background:var(--cyan);box-shadow:0 0 0 5px #59e1f233,0 0 22px var(--cyan);transform:translate(-50%,-50%)}.map-marker.selected{background:var(--amber);box-shadow:0 0 0 6px #ffc87533,0 0 25px var(--amber)}.map-label{position:absolute;z-index:3;font:9px 'DM Mono';color:#eaf7ff;text-shadow:0 2px 5px #000;white-space:nowrap}.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 13px}.section-title p{font-size:11px;color:var(--muted);margin:0}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.field{display:flex;flex-direction:column;gap:7px}.field label{font:10px 'DM Mono';color:var(--muted);letter-spacing:.8px}.field input,.field select{background:#071222;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 11px;min-width:0;width:100%;outline:none}.field input:focus,.field select:focus{border-color:var(--cyan)}.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.notice{padding:12px 14px;border-radius:11px;border:1px solid #ffc87544;background:#ffc8750b;color:#e8c995;font-size:11px;line-height:1.6}.success{border-color:#72e3b144;background:#72e3b10b;color:#a8ebcf}.empty{height:180px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:11px;border:1px dashed var(--line);border-radius:12px;padding:20px}.bar{height:7px;background:#ffffff12;border-radius:20px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:20px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:11px;min-width:560px}th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line)}th{font:9px 'DM Mono';color:var(--muted);letter-spacing:1px}td{color:#d9e7f6}td.mono{font-size:10px}.site-select{background:#081526;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px}.intro{position:fixed;inset:0;z-index:100;background:#02050c;display:grid;place-items:center;overflow:hidden}.intro.hide{display:none}.intro canvas{position:absolute;inset:0;width:100%;height:100%}.intro-content{position:relative;z-index:2;text-align:center;padding:25px;max-width:750px}.intro-title{font-size:clamp(36px,7vw,78px);font-weight:800;letter-spacing:5px;text-shadow:0 0 35px #6bdfff66;margin:15px 0}.intro-sub{font:11px 'DM Mono';letter-spacing:3px;color:#9ab5d2}.intro-moon{width:170px;height:170px;margin:0 auto 20px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#e6e7df,#777f8c 48%,#202b3d 75%);box-shadow:inset -20px -12px 30px #000b,0 0 80px #8dcfff55}.intro-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}.intro-note{font:10px 'DM Mono';color:#8fa7c2;margin-top:15px}.hidden{display:none!important}.toast{position:fixed;bottom:20px;right:20px;z-index:300;background:#142943;border:1px solid #59e1f266;border-radius:12px;padding:12px 16px;font-size:11px;box-shadow:0 10px 30px #0008;display:none;backdrop-filter:blur(10px)}
+@media(max-width:1050px){.sidebar{width:215px}.main{margin-left:215px}.grid-4{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.moon-ball{width:170px;height:170px}}
+@media(max-width:720px){.sidebar{position:sticky;top:0;width:100%;height:auto;inset:auto;padding:10px 12px;display:block;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:0 5px 8px}.brand-mark{width:32px;height:32px}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow:auto;gap:4px}.nav button{width:auto;white-space:nowrap;padding:9px 11px;font-size:10px}.nav .ico{display:none}.main{margin:0;padding:19px 14px 45px}.topbar{margin-bottom:20px}.grid-3,.grid-2{grid-template-columns:1fr}.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-visual{min-height:300px}.moon-ball{width:130px;height:130px;right:-15px;top:70%}.form-grid{grid-template-columns:1fr 1fr}.pill{display:none}}
+@media(max-width:420px){.grid-4{grid-template-columns:1fr 1fr}.card{padding:14px}.form-grid{grid-template-columns:1fr}.metric{font-size:23px}}
+</style>
+
+<style>
+/* CREATIVE VISUAL UPGRADE */
+:root{--cyan:#75f0ff;--blue:#739cff;--purple:#bd91ff}
+body{background-color:#030711;background-image:
+ radial-gradient(ellipse at 12% 12%,rgba(54,111,185,.19),transparent 32%),
+ radial-gradient(ellipse at 88% 28%,rgba(114,68,173,.14),transparent 30%),
+ radial-gradient(ellipse at 48% 100%,rgba(23,111,145,.12),transparent 38%),
+ linear-gradient(135deg,#030711,#071326 55%,#050914)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.22;background-image:radial-gradient(#bdeaff 1px,transparent 1px);background-size:53px 53px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+.sidebar{background:linear-gradient(180deg,rgba(4,10,23,.97),rgba(8,17,34,.94));box-shadow:12px 0 50px #0004}
+.brand-mark{position:relative;isolation:isolate}.brand-mark:after{content:"";position:absolute;inset:-5px;border:1px solid #70eaff77;border-radius:16px;animation:orbitGlow 4s ease-in-out infinite;z-index:-1}
+@keyframes orbitGlow{50%{transform:scale(1.14) rotate(12deg);opacity:.3}}
+.nav button{position:relative;overflow:hidden}.nav button:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,#8ceeff12,transparent);transform:translateX(-120%);transition:.5s}.nav button:hover:after{transform:translateX(120%)}
+.card{position:relative;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .25s,border-color .25s,box-shadow .25s}
+.card:hover{border-color:#75eaff66;box-shadow:0 15px 45px #0005,0 0 28px #4acbe415}
+.hero-visual{isolation:isolate;background:
+  radial-gradient(ellipse at 60% 50%, rgba(20,55,100,0.38) 0%, rgba(8,20,42,0.85) 60%, rgba(4,10,22,0.95) 100%),
+  linear-gradient(110deg, rgba(3,8,19,0.88) 0%, rgba(7,18,38,0.58) 45%, rgba(3,8,19,0.88) 100%),
+  var(--rocket-bg) center 30% / cover no-repeat;
+  border: 1px solid rgba(117,240,255,0.28);
+}
+.hero-visual:before{content:"";position:absolute;width:420px;height:420px;border:1px solid #80caff21;border-radius:50%;right:-70px;top:-75px;box-shadow:0 0 0 25px #80caff08,0 0 0 55px #80caff06;animation:slowOrbit 34s linear infinite}
+.hero-visual:after{content:"";position:absolute;width:300px;height:300px;border:1px dashed #8bdcff28;border-radius:50%;right:-8px;top:-15px;animation:slowOrbit 25s linear infinite reverse}
+@keyframes slowOrbit{to{transform:rotate(360deg)}}
+.moon-ball{width:230px;height:230px;background:
+ radial-gradient(circle at 29% 32%,#f4f0e7 0 2%,transparent 2.5%),
+ radial-gradient(circle at 62% 68%,#414a59 0 5%,transparent 5.5%),
+ radial-gradient(circle at 70% 30%,#4c5664 0 8%,transparent 8.5%),
+ radial-gradient(circle at 42% 74%,#525c69 0 4%,transparent 4.5%),
+ radial-gradient(circle at 32% 30%,#e6e6dc,#9ca2a8 36%,#555f70 68%,#151e2e 82%);
+ box-shadow:inset -30px -22px 40px #000b,0 0 80px #8dcfff44,0 0 150px #5b8cff1b;animation:moonFloat 8s ease-in-out infinite}
+@keyframes moonFloat{50%{transform:translateY(calc(-50% - 10px)) rotate(2deg)}}
+.metric{background:linear-gradient(100deg,#fff,#9eeeff 70%,#a9a0ff);background-clip:text;-webkit-background-clip:text;color:transparent}
+.btn{position:relative;overflow:hidden;background:linear-gradient(110deg,#14516a,#263c78 58%,#4b3479);box-shadow:0 5px 22px #3dcde41b}
+.btn:before{content:"";position:absolute;top:-60%;left:-50%;width:30%;height:220%;transform:rotate(25deg);background:#ffffff20;transition:left .6s}
+.btn:hover:before{left:130%}
+.intro{background:radial-gradient(ellipse at 50% 48%,#0e2c50 0%,#071426 32%,#02050c 75%)}
+.intro:after{content:"";position:absolute;width:min(75vw,720px);height:min(75vw,720px);border:1px solid #77dfff18;border-radius:50%;box-shadow:0 0 0 35px #77dfff08,0 0 0 80px #77dfff05;animation:slowOrbit 60s linear infinite;pointer-events:none}
+.intro-moon{position:relative;width:190px;height:190px;background:
+ radial-gradient(circle at 28% 33%,#485363 0 4px,transparent 5px),
+ radial-gradient(circle at 64% 61%,#4a5260 0 9px,transparent 10px),
+ radial-gradient(circle at 45% 76%,#515b68 0 6px,transparent 7px),
+ radial-gradient(circle at 30% 25%,#f1eee4,#a8adb1 42%,#626d7c 70%,#182337 83%);
+ box-shadow:inset -28px -18px 38px #000c,0 0 95px #8acfff66,0 0 180px #4979d433;animation:moonFloat 7s ease-in-out infinite}
+.intro-title{letter-spacing:clamp(2px,.9vw,9px);background:linear-gradient(90deg,#fff,#91eaff,#c5a9ff);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:none}
+.intro-content{width:min(900px,100%);animation:introRise 1.3s ease both}
+@keyframes introRise{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
+.map{background:radial-gradient(ellipse at 50% 50%,#566273 0%,#28364a 42%,#111d30 72%,#070e1b 100%)}
+.map-marker{animation:markerPulse 2.8s ease-in-out infinite}
+@keyframes markerPulse{50%{box-shadow:0 0 0 9px #59e1f218,0 0 28px var(--cyan)}}
+.section-title{position:relative}
+.tag{backdrop-filter:blur(8px)}
+@media(max-width:720px){.moon-ball{width:135px;height:135px}.hero-visual:before{right:-190px}.hero-visual:after{right:-130px}}
+
+/* CINEMATIC MISSION UPGRADE */
+.intro{isolation:isolate;background:radial-gradient(ellipse at 50% 46%,#182e55 0%,#081226 34%,#02040b 78%)}
+.solar-system-scene{position:absolute;inset:0;display:grid;place-items:center;perspective:1100px;transform-style:preserve-3d;cursor:grab;overflow:hidden;transition:transform 1.5s ease}
+.solar-system-scene:active{cursor:grabbing}.deep-nebula{position:absolute;width:110vw;height:100vh;background:radial-gradient(ellipse at 20% 35%,#7a3e9b2b,transparent 30%),radial-gradient(ellipse at 75% 65%,#2878b633,transparent 35%),radial-gradient(ellipse at 55% 15%,#e18a4920,transparent 25%);filter:blur(24px);animation:nebulaDrift 24s ease-in-out infinite alternate}
+@keyframes nebulaDrift{to{transform:translate3d(3vw,-2vh,-20px) scale(1.12)}}
+.sun-core{position:absolute;width:clamp(52px,7vw,92px);height:clamp(52px,7vw,92px);border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff9cf,#ffc45a 35%,#f27632 67%,#8b2f27);box-shadow:0 0 35px #ffb24e,0 0 90px #ff8b3d99,0 0 180px #ff7a2c55;z-index:4;display:grid;place-items:center}
+.sun-core span{font:8px 'DM Mono';color:#51230d;letter-spacing:1px;font-weight:bold}
+.orbit{position:absolute;width:var(--orbit-w);height:var(--orbit-h);border:1px solid #a9c8e52a;border-radius:50%;transform:rotateX(68deg) rotateZ(var(--tilt));transform-style:preserve-3d;animation:orbitSpin var(--speed) linear infinite}
+@keyframes orbitSpin{from{transform:rotateX(68deg) rotateZ(var(--tilt)) rotate(0deg)}to{transform:rotateX(68deg) rotateZ(var(--tilt)) rotate(360deg)}}
+.planet{position:absolute;left:50%;top:-7px;width:var(--size);height:var(--size);border-radius:50%;display:block;transform:rotateX(-68deg);box-shadow:inset -7px -4px 12px #0009,0 0 13px #c6e8ff44}
+.mercury{background:radial-gradient(circle at 30% 30%,#d6c6b1,#6d6259 70%);--size:8px}.venus{background:radial-gradient(circle at 30% 30%,#fff0bd,#bc7944 70%);--size:13px}
+.earth{background:radial-gradient(circle at 30% 30%,#b5f4ff,#2688c8 42%,#12446e 72%);--size:16px}.moonlet{position:absolute;width:4px;height:4px;background:#bbb;border-radius:50%;left:21px;top:0;box-shadow:0 0 4px white}
+.mars{background:radial-gradient(circle at 30% 30%,#ffc09a,#a3452e 70%);--size:11px}.jupiter{background:repeating-linear-gradient(0deg,#d8b88c 0 4px,#8b654d 5px 7px,#e8d0a6 8px 11px);--size:32px}
+.saturn{background:radial-gradient(circle at 30% 30%,#f2d8a1,#a27b4e 70%);--size:25px}.saturn b{position:absolute;width:48px;height:13px;border:3px solid #d9c18eaa;border-radius:50%;left:-12px;top:6px;transform:rotate(-20deg)}
+.uranus{background:radial-gradient(circle at 30% 30%,#c9fbf5,#5b9eaa 75%);--size:19px}.neptune{background:radial-gradient(circle at 30% 30%,#9bc4ff,#254caa 75%);--size:18px}
+.orbit-mercury{--orbit-w:18vw;--orbit-h:10vw;--speed:14s;--tilt:-8deg}.orbit-venus{--orbit-w:28vw;--orbit-h:16vw;--speed:21s;--tilt:8deg}.orbit-earth{--orbit-w:39vw;--orbit-h:22vw;--speed:28s;--tilt:-4deg}.orbit-mars{--orbit-w:50vw;--orbit-h:28vw;--speed:36s;--tilt:10deg}.orbit-jupiter{--orbit-w:63vw;--orbit-h:36vw;--speed:48s;--tilt:-8deg}.orbit-saturn{--orbit-w:76vw;--orbit-h:43vw;--speed:62s;--tilt:7deg}.orbit-uranus{--orbit-w:89vw;--orbit-h:50vw;--speed:78s;--tilt:-5deg}.orbit-neptune{--orbit-w:102vw;--orbit-h:57vw;--speed:94s;--tilt:6deg}
+.solar-caption{position:absolute;bottom:7%;left:50%;transform:translateX(-50%);font:9px 'DM Mono';letter-spacing:2px;color:#9fc6e6;white-space:nowrap;text-shadow:0 0 12px #69bfff}
+.intro-content{z-index:10;margin-top:12vh;text-shadow:0 3px 18px #000}.intro-content:before{content:"";position:absolute;inset:-30px -60px;background:radial-gradient(ellipse,#020713b8,transparent 72%);z-index:-1}
+.astronaut-drift{position:fixed;right:3.5%;top:18%;z-index:15;font-size:clamp(27px,4vw,48px);filter:drop-shadow(0 0 18px #9bdcff88);opacity:.58;pointer-events:none;animation:astronautFloat 15s ease-in-out infinite}
+@keyframes astronautFloat{0%,100%{transform:translate3d(0,0,0) rotate(-12deg)}50%{transform:translate3d(-28px,38px,0) rotate(14deg)}}
+.rocket-overlay{display:none;position:fixed;inset:0;z-index:250;background:radial-gradient(ellipse at 50% 50%,#18385df2,#030813f7 70%);backdrop-filter:blur(9px);place-items:center;overflow:hidden}.rocket-overlay.show{display:grid}
+.rocket-overlay:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#d9f4ff 1px,transparent 1px);background-size:42px 42px;opacity:.35;animation:starTravel 4s linear infinite}
+@keyframes starTravel{to{background-position:0 160px}}
+.rocket-stage{position:relative;width:210px;height:260px;animation:rocketLift 3.4s ease-in-out both}.rocket-body{position:absolute;left:83px;top:35px;width:44px;height:150px;background:linear-gradient(90deg,#758ba8,#f0f5f9 35%,#aabbd0 70%,#536982);clip-path:polygon(50% 0,100% 22%,100% 88%,50% 100%,0 88%,0 22%);border-radius:20px;z-index:3}
+.rocket-body:before{content:"";position:absolute;top:0;left:0;width:100%;height:36px;background:linear-gradient(90deg,#9aafc8,#fff,#7891ac);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.rocket-window{position:absolute;top:53px;left:12px;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c6f6ff,#2774a9 65%);border:3px solid #3c536e}
+.rocket-fin{position:absolute;bottom:6px;width:30px;height:55px;background:linear-gradient(90deg,#e36c42,#9b2f29);z-index:2}.rocket-fin.left{left:-18px;clip-path:polygon(100% 0,100% 100%,0 100%,35% 45%)}.rocket-fin.right{right:-18px;clip-path:polygon(0 0,65% 45%,100% 100%,0 100%)}
+.rocket-flame{position:absolute;left:91px;top:175px;width:28px;height:70px;background:linear-gradient(#fff7a6,#ff9b38,#e43c25,transparent);filter:blur(4px);border-radius:50%;animation:flamePulse .15s infinite alternate}
+@keyframes flamePulse{to{transform:scaleY(1.2);opacity:.7}}
+.solar-panel{position:absolute;top:90px;width:75px;height:65px;background:repeating-linear-gradient(90deg,#1d5d92 0 13px,#9ac9ec 14px 15px),repeating-linear-gradient(0deg,transparent 0 12px,#c6edff 13px 14px);border:2px solid #b5d9ef;opacity:0;z-index:1}
+.left-panel{left:7px;transform-origin:right center;animation:deployLeft .8s 1.4s forwards}.right-panel{right:7px;transform-origin:left center;animation:deployRight .8s 1.4s forwards}
+@keyframes deployLeft{to{opacity:1;transform:rotateY(65deg) translateX(-28px)}}@keyframes deployRight{to{opacity:1;transform:rotateY(-65deg) translateX(28px)}}
+@keyframes rocketLift{0%{transform:translateY(90px) scale(.72);opacity:0}20%{opacity:1}65%{transform:translateY(-10px) scale(1)}100%{transform:translateY(-40px) scale(.94)}}
+.rocket-status{position:absolute;top:calc(50% + 155px);font:10px 'DM Mono';letter-spacing:2px;color:#9cecff;text-align:center;text-shadow:0 0 15px #53dfff}
+.moon-ball.site-zoom{animation:siteZoom 1.6s cubic-bezier(.2,.8,.2,1)}.map.site-zoom{animation:mapTargetZoom 1.6s cubic-bezier(.2,.8,.2,1)}@keyframes mapTargetZoom{0%{transform:perspective(700px) rotateY(0) scale(1)}45%{transform:perspective(700px) rotateY(180deg) scale(1.22)}100%{transform:perspective(700px) rotateY(360deg) scale(1.06)}}@keyframes siteZoom{0%{transform:translateY(-50%) rotateY(0) scale(1)}45%{transform:translateY(-50%) rotateY(190deg) scale(1.4)}100%{transform:translateY(-50%) rotateY(360deg) scale(1.12)}}
+.comm-scene,.blackout-scene,.time-window{height:180px;position:relative;overflow:hidden;border-radius:12px;background:radial-gradient(ellipse at center,#183958,#071322 72%);border:1px solid #8ac9ff22}
+.earth-orb,.moon-orb{position:absolute;top:48px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font:8px 'DM Mono';color:white;box-shadow:inset -12px -7px 15px #0009,0 0 25px #58bfff66}
+.earth-orb{left:12%;background:radial-gradient(circle at 32% 25%,#c9f7ff,#368bd0 48%,#16446e 75%)}.moon-orb{right:12%;background:radial-gradient(circle at 32% 25%,#f0eee2,#8993a0 50%,#343f50 78%);color:#17202c}
+.signal-path{position:absolute;left:27%;right:27%;top:76px;height:2px;background:linear-gradient(90deg,transparent,#7be8ff,#fff,#7be8ff,transparent);box-shadow:0 0 15px #70eaff;animation:signalPulse 1.8s ease-in-out infinite}
+@keyframes signalPulse{50%{opacity:.25;filter:blur(3px)}}.comm-caption{position:absolute;bottom:13px;left:0;right:0;text-align:center;font:8px 'DM Mono';color:#9db9d4;letter-spacing:1px}
+.time-window{padding:35px 18px 12px}.time-track{height:16px;display:flex;gap:5px;margin-top:15px}.time-track i{display:block;flex:1;border-radius:4px;background:linear-gradient(90deg,#3c5874,#22364d);border:1px solid #9cb9d422}.time-track i:nth-child(2),.time-track i:nth-child(4){background:linear-gradient(90deg,#1e7790,#6ce5f0)}
+.time-labels{display:flex;justify-content:space-between;color:#91a5bf;font:8px 'DM Mono';margin-top:9px}.time-window p{font-size:9px;color:#91a5bf;line-height:1.5;margin-top:20px}
+.blackout-scene{display:grid;place-items:center}.horizon-line{position:absolute;left:0;right:0;top:65%;height:2px;background:#8da9c9}.signal-beam{position:absolute;left:50%;top:20%;width:2px;height:45%;background:linear-gradient(#7beaff,transparent);transform:rotate(30deg);transform-origin:bottom;animation:beamBlink 2.4s infinite}
+@keyframes beamBlink{50%{opacity:.12}}.blackout-scene span{position:relative;margin-top:80px;font:9px 'DM Mono';color:#ffc875}
+@media(max-width:720px){.orbit-mercury{--orbit-w:45vw;--orbit-h:25vw}.orbit-venus{--orbit-w:65vw;--orbit-h:37vw}.orbit-earth{--orbit-w:85vw;--orbit-h:48vw}.orbit-mars{--orbit-w:105vw;--orbit-h:59vw}.orbit-jupiter{--orbit-w:125vw;--orbit-h:70vw}.orbit-saturn,.orbit-uranus,.orbit-neptune{display:none}.intro-content{margin-top:25vh}.solar-caption{bottom:12%}.astronaut-drift{right:4%;top:10%}}
+
+/* DYNAMIC SPACE MISSION BACKDROP */
+.mission-backdrop{
+  position:fixed;
+  inset:0 0 0 250px;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  transition:opacity .5s ease;
+}
+@media(max-width:1050px){.mission-backdrop{inset:0 0 0 215px}}
+@media(max-width:720px){.mission-backdrop{inset:0 0 0 0}}
+.mission-backdrop-img{
+  position:absolute;
+  inset:-35px;
+  background-image:var(--rocket-bg);
+  background-size:cover;
+  background-position:center 32%;
+  background-repeat:no-repeat;
+  opacity:var(--backdrop-opacity,0.48);
+  filter:saturate(1.15) contrast(1.1) brightness(0.92);
+  transform:scale(1.02);
+  transition:opacity .5s ease, transform .85s cubic-bezier(0.16, 1, 0.3, 1), filter .5s ease;
+  will-change:transform,opacity;
+}
+.mission-backdrop-glow{
+  position:absolute;
+  top:18%;
+  right:26%;
+  width:550px;
+  height:550px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(93,225,255,0.24) 0%,rgba(91,140,255,0.12) 40%,transparent 70%);
+  filter:blur(45px);
+  pointer-events:none;
+  animation:enginePlumePulse 5s ease-in-out infinite alternate;
+}
+@keyframes enginePlumePulse{
+  0%{transform:scale(0.92) translate(0,0);opacity:0.65}
+  100%{transform:scale(1.12) translate(-10px,8px);opacity:1}
+}
+.mission-backdrop-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 75% 25%,rgba(16,40,80,0.22) 0%,transparent 60%),
+    linear-gradient(180deg,rgba(3,7,17,0.72) 0%,rgba(5,9,20,0.52) 30%,rgba(5,9,20,0.70) 70%,rgba(3,7,17,0.95) 100%),
+    linear-gradient(90deg,rgba(3,7,17,0.88) 0%,rgba(3,7,17,0.40) 45%,rgba(3,7,17,0.82) 100%);
+}
+.mission-backdrop-grid{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(to right,rgba(117,240,255,0.035) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(117,240,255,0.035) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at 65% 35%,black 35%,transparent 85%);
+  -webkit-mask-image:radial-gradient(circle at 65% 35%,black 35%,transparent 85%);
+}
+.mission-backdrop-telemetry{
+  position:absolute;
+  bottom:18px;
+  right:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:3px;
+  opacity:0.75;
+  font:9px 'DM Mono',monospace;
+  color:var(--cyan);
+  letter-spacing:1.5px;
+  text-shadow:0 0 10px rgba(89,225,242,0.45);
+  pointer-events:none;
+}
+.mission-backdrop-telemetry .telemetry-sub{
+  color:#91a5bf;
+  font-size:8.5px;
+  letter-spacing:1px;
+}
+</style>
+
+</head>
+<body>
+<div class="intro" id="intro">
+ <canvas id="introStars"></canvas>
+ <div class="solar-system-scene" id="solarScene" aria-label="Interactive solar system. Drag to rotate the view.">
+  <div class="deep-nebula"></div><div class="sun-core"><span>SUN</span></div>
+  <div class="orbit orbit-mercury"><i class="planet mercury"></i></div><div class="orbit orbit-venus"><i class="planet venus"></i></div>
+  <div class="orbit orbit-earth"><i class="planet earth"><b class="moonlet"></b></i></div><div class="orbit orbit-mars"><i class="planet mars"></i></div>
+  <div class="orbit orbit-jupiter"><i class="planet jupiter"></i></div><div class="orbit orbit-saturn"><i class="planet saturn"><b></b></i></div>
+  <div class="orbit orbit-uranus"><i class="planet uranus"></i></div><div class="orbit orbit-neptune"><i class="planet neptune"></i></div>
+  <div class="solar-caption">SOLAR SYSTEM // DRAG TO ROTATE 360°</div>
+ </div>
+ <div class="intro-content" id="introContent">
+  <div class="intro-sub" id="introStage">DEEP SPACE TRANSMISSION // INITIALIZING</div>
+  <div class="intro-title" id="introTitle">LUNAR FRONTIER</div>
+  <div class="intro-sub">LUNAR SOUTH POLE MISSION NAVIGATOR</div>
+  <p style="color:#c0d0e5;font-size:13px;line-height:1.8;margin:15px auto;max-width:620px" id="narration">Travel from Earth orbit to the lunar South Pole. Explore five candidate regions, inspect mission conditions and compare the evidence for a future landing.</p>
+  <div class="intro-controls"><button class="btn" id="startBtn">GET STARTED&nbsp; →</button></div>
+  <div class="intro-note">INTERACTIVE MISSION VISUALISATION · NOT AN OFFICIAL NASA PRODUCT</div>
+ </div>
+</div>
+<div class="astronaut-drift" aria-hidden="true">👨‍🚀</div>
+<div class="rocket-overlay" id="rocketOverlay" aria-hidden="true">
+ <div class="rocket-stage"><div class="rocket-flame"></div><div class="rocket-body"><div class="rocket-window"></div><div class="rocket-fin left"></div><div class="rocket-fin right"></div></div><div class="solar-panel left-panel"></div><div class="solar-panel right-panel"></div></div>
+ <div class="rocket-status" id="rocketStatus">DEPLOYING SOLAR ARRAY // RUNNING ANALYSIS</div>
+</div>
+<div class="app" id="app">
+ <aside class="sidebar">
+  <div class="brand"><div class="brand-mark">☾</div><div><strong>LUNAR NAVIGATOR</strong><small>MISSION ANALYSIS SYSTEM</small></div></div>
+  <div class="nav-label">MISSION CONSOLE</div>
+  <nav class="nav" id="nav">
+   <button class="active" data-page="dashboard"><span class="ico">⌂</span>Dashboard</button>
+   <button data-page="explorer"><span class="ico">◎</span>Site Explorer</button>
+   <button data-page="solar"><span class="ico">☼</span>Solar Analysis</button>
+   <button data-page="communication"><span class="ico">⌁</span>Communication</button>
+   <button data-page="terrain"><span class="ico">▧</span>Terrain Analysis</button>
+   <button data-page="comparison"><span class="ico">⇄</span>Comparison Engine</button>
+   <button data-page="recommendation"><span class="ico">✧</span>AI Recommendation</button>
+   <button data-page="visualization"><span class="ico">◉</span>Visualization</button>
+  </nav>
+  <div class="side-bottom"><div><span class="status-dot"></span><small>FRONTEND SYSTEM ONLINE</small></div><small style="display:block;margin-top:8px">DATA STATUS: DEMO / NOT VERIFIED</small></div>
+ </aside>
+ 
+ <!-- DYNAMIC SPACE BACKGROUND FOR DASHBOARD & ALL MODULES -->
+ <div class="mission-backdrop" id="missionBackdrop" aria-hidden="true">
+  <div class="mission-backdrop-img" id="backdropImg"></div>
+  <div class="mission-backdrop-glow"></div>
+  <div class="mission-backdrop-overlay"></div>
+  <div class="mission-backdrop-grid"></div>
+  <div class="mission-backdrop-telemetry">
+   <div><strong>NASA // ORBITAL STAGING SEPARATION</strong></div>
+   <div class="telemetry-sub" id="telemetrySub">STAGE II SEPARATION // TLI CORRIDOR · ALT: 185 KM</div>
+  </div>
+ </div>
+
+ <main class="main">
+  <div class="topbar">
+   <div class="crumb">LUNAR OPERATIONS <span style="color:var(--cyan)">/</span> <span id="crumb">DASHBOARD</span></div>
+   <div class="top-actions">
+    <button class="pill" id="bgModeBtn" title="Toggle background intensity" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+     <span style="color:var(--cyan)">🚀</span> BACKDROP: <b id="bgModeText" style="color:var(--cyan)">VIVID</b>
+    </button>
+    <span class="pill"><b>●</b> LOCAL INTERFACE ACTIVE</span>
+    <button class="icon-btn" id="musicToggle" title="Toggle ambience">♫</button>
+    <button class="icon-btn" id="helpBtn" title="Data information">ⓘ</button>
+   </div>
+  </div>
+  <section class="page active" id="page-dashboard">
+   <div class="hero">
+    <div class="card hero-visual"><canvas id="heroStars"></canvas><div class="hero-copy"><div class="eyebrow">LUNAR SOUTH POLE · MISSION OVERVIEW</div><h1>Find the safest path<br>to the lunar surface.</h1><p class="sub">Explore five candidate regions, inspect mission constraints and compare the data required for a future landing-site decision.</p><div class="hero-actions"><button class="btn" data-go="explorer">EXPLORE SITES →</button><button class="btn secondary" data-go="comparison">COMPARE LOCATIONS</button></div></div><div class="moon-ball"></div></div>
+    <div class="card"><div class="card-head"><h3>MISSION READINESS</h3><span class="tag warn">DATA INCOMPLETE</span></div><div class="metric" style="color:var(--amber)">PENDING</div><div class="metric-label">SCIENTIFIC DATA VALIDATION</div><div class="data-row" style="margin-top:16px"><span>Terrain dataset</span><strong>Not connected</strong></div><div class="data-row"><span>Illumination model</span><strong>Input required</strong></div><div class="data-row"><span>Earth geometry</span><strong>Input required</strong></div><div class="data-row"><span>Recommendation</span><strong>Not yet evaluated</strong></div><div class="notice" style="margin-top:13px">No real NASA dataset is bundled with this standalone HTML file. Values are not fabricated; connect verified data before mission ranking.</div></div>
+   </div>
+   <div class="grid grid-4">
+    <div class="card"><div class="metric">05</div><div class="metric-label">CANDIDATE REGIONS</div></div>
+    <div class="card"><div class="metric">—</div><div class="metric-label">BEST SUITABILITY SCORE</div></div>
+    <div class="card"><div class="metric">—</div><div class="metric-label">SOLAR AVAILABILITY</div></div>
+    <div class="card"><div class="metric">—</div><div class="metric-label">EARTH VISIBILITY</div></div>
+   </div>
+   <div class="section-title"><div><h2>Candidate landing regions</h2><p>Example region names and approximate reference coordinates; verify before use.</p></div><span class="tag">5 LOCATIONS</span></div>
+   <div class="grid grid-3" id="siteCards"></div>
+   <div class="section-title"><div><h2>Lunar operations map</h2><p>Schematic locator only — not a navigational or elevation map.</p></div><span class="tag warn">SCHEMATIC</span></div>
+   <div class="card"><div class="map" id="dashboardMap"></div></div>
+  </section>
+  <section class="page" id="page-explorer">
+   <div class="eyebrow">MODULE 02 / REGIONAL INSPECTION</div><h1>Site Explorer</h1><p class="sub">Select a candidate region to inspect its reference position, available evidence and missing scientific inputs.</p>
+   <div class="toolbar"><select class="site-select" id="explorerSelect"></select><span class="tag warn">REFERENCE COORDINATES · VERIFY</span></div>
+   <div class="grid grid-2">
+    <div class="card"><div class="card-head"><h3 id="explorerName">Shackleton Crater Rim Region</h3><span class="tag">SITE PROFILE</span></div><div class="map" id="explorerMap"></div><p class="sub" id="siteProfile" style="margin:13px 0 5px"></p><div class="data-row"><span>Latitude</span><strong id="latValue">—</strong></div><div class="data-row"><span>Longitude</span><strong id="lonValue">—</strong></div><div class="data-row"><span>Elevation</span><strong>Awaiting LOLA data</strong></div><div class="data-row"><span>Surface imagery</span><strong>Not connected</strong></div></div>
+    <div class="card"><h3>Regional analysis</h3><p class="sub">A reliable site profile requires co-registered elevation, imagery, illumination and hazard datasets.</p><div class="data-row"><span>Terrain safety</span><strong>Not evaluated</strong></div><div class="data-row"><span>Solar conditions</span><strong>Not evaluated</strong></div><div class="data-row"><span>Earth visibility</span><strong>Not evaluated</strong></div><div class="data-row"><span>Landing suitability</span><strong>Not evaluated</strong></div><div class="notice" style="margin-top:16px">Load a verified site dataset to replace these unavailable fields. The interface deliberately does not invent scientific measurements.</div></div>
+   </div>
+  </section>
+  <section class="page" id="page-solar">
+   <div class="eyebrow">MODULE 03 / POWER & ILLUMINATION</div><h1>Solar Analysis</h1><p class="sub">Estimate sunlight, darkness and solar energy for the selected region. A deployment sequence runs before the input-based energy budget is displayed; validated site timelines still require SPICE and illumination data.</p>
+   <div class="grid grid-2">
+    <div class="card"><div class="card-head"><h3>Solar geometry inputs</h3><span class="tag">USER INPUT</span></div><div class="form-grid">
+     <div class="field"><label>SOLAR ELEVATION (°)</label><input id="solarElev" type="number" min="-90" max="90" value="15"></div>
+     <div class="field"><label>DAYLIGHT HOURS</label><input id="dayHours" type="number" min="0" max="708" step=".1" value="120"></div>
+     <div class="field"><label>MISSION PERIOD (HOURS)</label><input id="periodHours" type="number" min="1" value="336"></div>
+     <div class="field"><label>PANEL AREA (m²)</label><input id="panelArea" type="number" min="0" step=".1" value="2"></div>
+     <div class="field"><label>PANEL EFFICIENCY (%)</label><input id="panelEff" type="number" min="0" max="100" value="25"></div>
+     <div class="field"><label>BATTERY CAPACITY (Wh)</label><input id="battery" type="number" min="0" value="1500"></div>
+    </div><div class="toolbar"><button class="btn" id="calcSolar">CALCULATE SOLAR BUDGET</button></div><div class="notice">Assumptions: solar constant set to 1361 W/m² at 1 AU; lunar distance variation and panel temperature/dust/angle losses are not modelled. Treat results as simplified estimates.</div></div>
+    <div class="card"><div class="card-head"><h3>Calculated energy budget</h3><span class="tag good">MODELLED FROM INPUTS</span></div><div class="grid grid-2"><div><div class="metric" id="solarPower">—</div><div class="metric-label">PANEL POWER (W)</div></div><div><div class="metric" id="solarEnergy">—</div><div class="metric-label">ENERGY / PERIOD (Wh)</div></div><div><div class="metric" id="darkHours">—</div><div class="metric-label">DARKNESS (HOURS)</div></div><div><div class="metric" id="batteryNeed">—</div><div class="metric-label">BATTERY CAPACITY (Wh)</div></div></div><canvas class="chart" id="solarChart"></canvas></div>
+   </div>
+   <div class="section-title"><div><h2>Solar analysis coverage</h2><p>Additional SPICE-derived time-series data is required for validated site-specific outputs.</p></div></div>
+   <div class="grid grid-3"><div class="card"><h3>Incidence angle</h3><div class="metric">Input-based</div><p class="sub">Requires surface normal and Sun vector.</p></div><div class="card"><h3>Illumination heatmap</h3><div class="metric">Unavailable</div><p class="sub">Requires gridded time-dependent illumination data.</p></div><div class="card"><h3>Sunlight / darkness</h3><div class="metric">Estimated</div><p class="sub">Calculated from daylight hours entered above.</p></div></div>
+  </section>
+  <section class="page" id="page-communication">
+   <div class="eyebrow">MODULE 04 / EARTH LINK</div><h1>Communication Analysis</h1><p class="sub">Estimate signal delay from geometric distance and inspect a simple line-of-sight condition. Accurate Earth visibility windows require ephemeris and terrain-horizon data.</p>
+   <div class="grid grid-2">
+    <div class="card"><h3>Link geometry inputs</h3><div class="form-grid">
+     <div class="field"><label>EARTH-SITE DISTANCE (km)</label><input id="distance" type="number" min="0" value="384400"></div>
+     <div class="field"><label>EARTH ELEVATION (°)</label><input id="earthElev" type="number" min="-90" max="90" value="10"></div>
+     <div class="field"><label>MINIMUM ELEVATION (°)</label><input id="minEarthElev" type="number" min="0" max="90" value="5"></div>
+    </div><div class="toolbar"><button class="btn" id="calcComm">CALCULATE LINK</button></div><div class="notice">Simplified geometric screening only. A positive elevation does not prove an unobstructed radio link; local terrain, antenna pointing and Earth occultation must be modelled.</div></div>
+    <div class="card"><div class="card-head"><h3>Communication estimate</h3><span class="tag">MODELLED</span></div><div class="grid grid-2"><div><div class="metric" id="oneWay">—</div><div class="metric-label">ONE-WAY DELAY (s)</div></div><div><div class="metric" id="roundTrip">—</div><div class="metric-label">ROUND-TRIP DELAY (s)</div></div><div><div class="metric" id="earthStatus">—</div><div class="metric-label">ELEVATION SCREEN</div></div><div><div class="metric" id="commWindow">—</div><div class="metric-label">VISIBILITY WINDOW</div></div></div><canvas class="chart" id="commChart"></canvas></div>
+   </div>
+   <div class="section-title"><div><h2>Communication analysis products</h2><p>These products require SPICE geometry and a local horizon profile.</p></div></div>
+   <div class="grid grid-3"><div class="card"><h3>Earth visibility diagram</h3><div class="comm-scene"><div class="earth-orb">EARTH</div><div class="signal-path"></div><div class="moon-orb">MOON</div><div class="comm-caption">LINE-OF-SIGHT CONCEPT · NOT TO SCALE</div></div></div><div class="card"><h3>Communication windows</h3><div class="time-window"><div class="time-track"><i></i><i></i><i></i><i></i></div><div class="time-labels"><span>0 h</span><span>6 h</span><span>12 h</span><span>18 h</span><span>24 h</span></div><p>Illustrative timeline only — no actual communication windows loaded.</p></div></div><div class="card"><h3>Blackout periods</h3><div class="blackout-scene"><div class="horizon-line"></div><div class="signal-beam"></div><span>BLACKOUT PERIODS: UNKNOWN</span></div></div></div>
+  </section>
+  <section class="page" id="page-terrain">
+   <div class="eyebrow">MODULE 05 / SURFACE HAZARDS</div><h1>Terrain Analysis</h1><p class="sub">Enter measured terrain parameters to calculate a transparent screening result. For real analysis, import LOLA elevation and higher-resolution LROC products.</p>
+   <div class="grid grid-2">
+    <div class="card"><h3>Terrain input panel</h3><div class="form-grid">
+     <div class="field"><label>MEAN SLOPE (°)</label><input id="slope" type="number" min="0" max="90" value="5"></div>
+     <div class="field"><label>ROUGHNESS INDEX (0–1)</label><input id="roughness" type="number" min="0" max="1" step=".01" value=".2"></div>
+     <div class="field"><label>CRATER / OBSTACLE COVER (%)</label><input id="hazards" type="number" min="0" max="100" value="10"></div>
+     <div class="field"><label>SAFE AREA (km²)</label><input id="safeArea" type="number" min="0" step=".01" value="1"></div>
+     <div class="field"><label>SURFACE TEMPERATURE (K)</label><input id="temperature" type="number" min="0" value="100"></div>
+     <div class="field"><label>MAX LANDING SLOPE (°)</label><input id="maxSlope" type="number" min="0" max="90" value="8"></div>
+    </div><div class="toolbar"><button class="btn" id="calcTerrain">RUN TERRAIN SCREEN</button></div><div class="notice">These inputs are illustrative until replaced with measurements from a documented dataset and a defined landing-footprint scale.</div></div>
+    <div class="card"><div class="card-head"><h3>Screening result</h3><span class="tag warn">INPUT-DEPENDENT</span></div><div class="metric" id="terrainStatus">NOT RUN</div><div class="metric-label">SLOPE THRESHOLD SCREEN</div><div class="data-row"><span>Safe-area input</span><strong id="terrainArea">—</strong></div><div class="data-row"><span>Roughness input</span><strong id="terrainRough">—</strong></div><div class="data-row"><span>Hazard coverage input</span><strong id="terrainHazard">—</strong></div><div class="data-row"><span>Temperature input</span><strong id="terrainTemp">—</strong></div><div class="notice" style="margin-top:12px">This is not an autonomous crater/boulder detector or a certified landing-safety assessment.</div></div>
+   </div>
+   <div class="section-title"><div><h2>Terrain products</h2><p>Upload geospatial rasters or derived products to enable mapped analysis.</p></div></div>
+   <div class="grid grid-3"><div class="card"><h3>Elevation / slope maps</h3><div class="empty">LOLA raster not loaded</div></div><div class="card"><h3>Crater / boulder detection</h3><div class="empty">LROC imagery and detection model not loaded</div></div><div class="card"><h3>Thermal suitability</h3><div class="empty">Thermal dataset not loaded</div></div></div>
+  </section>
+  <section class="page" id="page-comparison">
+   <div class="eyebrow">MODULE 06 / MULTI-SITE DECISION</div><h1>Comparison Engine</h1><p class="sub">Compare all five candidate regions against the evidence currently available. Unknown values remain unknown rather than being filled with invented numbers.</p>
+   <div class="card"><div class="card-head"><h3>Candidate site comparison</h3><span class="tag warn">SCIENTIFIC DATA PENDING</span></div><div class="table-wrap"><table><thead><tr><th>PARAMETER</th><th>SHACKLETON RIM</th><th>MALAPERT MASSIF</th><th>CONNECTING RIDGE</th><th>NOBILE RIM 1</th><th>DE GERLACHE RIM 1</th></tr></thead><tbody id="comparisonRows"></tbody></table></div></div>
+   <div class="section-title"><div><h2>Decision evidence</h2><p>Ranking is withheld until comparable measurements are available for all sites.</p></div></div>
+   <div class="grid grid-3"><div class="card"><h3>Solar advantage</h3><div class="metric">—</div><div class="metric-label">NO VERIFIED DATA</div></div><div class="card"><h3>Communication advantage</h3><div class="metric">—</div><div class="metric-label">NO VERIFIED DATA</div></div><div class="card"><h3>Terrain advantage</h3><div class="metric">—</div><div class="metric-label">NO VERIFIED DATA</div></div></div>
+  </section>
+  <section class="page" id="page-recommendation">
+   <div class="eyebrow">MODULE 07 / EXPLAINABLE DECISION SUPPORT</div><h1>AI Recommendation</h1><p class="sub">A transparent weighted scoring engine that evaluates supplied inputs. It refuses to rank sites when critical safety evidence is missing.</p>
+   <div class="grid grid-2">
+    <div class="card"><div class="card-head"><h3>Scoring configuration</h3><span class="tag">CLIENT-SIDE MODEL</span></div><p class="sub">Weights are configurable. The engine normalizes the weights and requires a complete set of inputs for each site.</p>
+     <div class="form-grid">
+      <div class="field"><label>SOLAR WEIGHT (%)</label><input id="wSolar" type="number" min="0" max="100" value="20"></div>
+      <div class="field"><label>COMMUNICATION (%)</label><input id="wComm" type="number" min="0" max="100" value="15"></div>
+      <div class="field"><label>TERRAIN SLOPE (%)</label><input id="wSlope" type="number" min="0" max="100" value="20"></div>
+      <div class="field"><label>ROUGHNESS (%)</label><input id="wRough" type="number" min="0" max="100" value="15"></div>
+      <div class="field"><label>HAZARDS (%)</label><input id="wHazard" type="number" min="0" max="100" value="15"></div>
+      <div class="field"><label>THERMAL / FEASIBILITY (%)</label><input id="wThermal" type="number" min="0" max="100" value="15"></div>
+     </div><div class="toolbar"><button class="btn" id="runRecommendation">EVALUATE CANDIDATE SITES</button></div>
+     <div class="notice">A weighted score cannot override a critical safety failure. Each site must pass the maximum-slope and hazard constraints before it can be recommended.</div>
+    </div>
+    <div class="card"><div class="card-head"><h3>Recommendation output</h3><span class="tag warn">AWAITING EVIDENCE</span></div><div class="empty" id="recommendationOutput">No recommendation generated.<br>Verified, comparable site data is required for all five locations.</div></div>
+   </div>
+   <div class="card" style="margin-top:15px"><h3>Explainability & risk controls</h3><div class="data-row"><span>Scoring method</span><strong>Weighted normalized sum</strong></div><div class="data-row"><span>Critical safety gate</span><strong>Separate from score</strong></div><div class="data-row"><span>Missing-data policy</span><strong>Withhold ranking</strong></div><div class="data-row"><span>Model status</span><strong>Decision-support prototype, not trained AI</strong></div></div>
+  </section>
+  <section class="page" id="page-visualization">
+   <div class="eyebrow">MODULE 08 / VISUAL MISSION ENVIRONMENT</div><h1>Interactive Visualization</h1><p class="sub">Explore a schematic lunar scene and inspect the candidate markers. This visual is illustrative, not a georeferenced terrain reconstruction.</p>
+   <div class="grid grid-2">
+    <div class="card"><div class="card-head"><h3>3D-style lunar surface</h3><span class="tag warn">SCHEMATIC RENDER</span></div><canvas id="lunarCanvas" class="chart tall" style="height:330px"></canvas><div class="toolbar"><button class="btn secondary" id="rotateMoon">ROTATE VIEW</button><button class="btn secondary" id="resetMoon">RESET VIEW</button></div></div>
+    <div class="card"><div class="card-head"><h3>Visualization layers</h3><span class="tag">LAYER CONTROL</span></div>
+     <label class="data-row"><span>Candidate site markers</span><input type="checkbox" id="layerMarkers" checked></label>
+     <label class="data-row"><span>Crater schematic</span><input type="checkbox" id="layerCraters" checked></label>
+     <label class="data-row"><span>Terrain grid</span><input type="checkbox" id="layerGrid" checked></label>
+     <label class="data-row"><span>Illumination overlay</span><input type="checkbox" id="layerLight"></label>
+     <div class="notice" style="margin-top:16px">Elevation, slope, thermal and solar heatmaps become scientifically meaningful only after corresponding raster/time-series datasets are loaded.</div>
+    </div>
+   </div>
+   <div class="section-title"><div><h2>Visualization catalogue</h2><p>Available interface layers and their current evidence status.</p></div></div>
+   <div class="grid grid-3"><div class="card"><h3>Elevation visualization</h3><span class="tag warn">DATA REQUIRED</span></div><div class="card"><h3>Slope heatmap</h3><span class="tag warn">DATA REQUIRED</span></div><div class="card"><h3>Solar illumination</h3><span class="tag warn">DATA REQUIRED</span></div><div class="card"><h3>Earth visibility</h3><span class="tag warn">SPICE REQUIRED</span></div><div class="card"><h3>Communication windows</h3><span class="tag warn">SPICE REQUIRED</span></div><div class="card"><h3>Interactive comparison</h3><span class="tag good">INTERFACE READY</span></div></div>
+  </section>
+ </main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const sites=[
+ {id:'shackleton',name:'Shackleton Crater Rim Region',short:'SHACKLETON RIM',lat:-89.9,lon:0.0,x:51,y:38,desc:'South-polar crater-rim reference region',profile:'A rim region near the permanently shadowed Shackleton crater. Illumination and local horizon conditions vary sharply across the rim.',focus:'Rim illumination, crater-edge slope and shadow boundary'},
+ {id:'malapert',name:'Malapert Massif Region',short:'MALAPERT MASSIF',lat:-85.99,lon:0.0,x:34,y:59,desc:'South-polar massif reference region',profile:'Elevated massif terrain considered for communications and solar access. Local slopes and line-of-sight must be checked at landing scale.',focus:'Elevated terrain, Earth line-of-sight and solar access'},
+ {id:'connecting',name:'Connecting Ridge Region',short:'CONNECTING RIDGE',lat:-89.0,lon:40.0,x:69,y:64,desc:'South-polar ridge reference region',profile:'A ridge reference region between major south-polar terrain features. Ridge continuity and local relief need high-resolution mapping.',focus:'Ridge continuity, local relief and landing footprint'},
+ {id:'nobile',name:'Nobile Rim 1 Region',short:'NOBILE RIM 1',lat:-84.6,lon:33.5,x:43,y:78,desc:'South-polar rim reference region',profile:'A candidate reference area associated with the Nobile region. Detailed slope, roughness and illumination statistics are not loaded.',focus:'Rim topography, roughness and illumination timeline'},
+ {id:'degerlache',name:'de Gerlache Rim 1 Region',short:'DE GERLACHE',lat:-88.5,lon:260.0,x:82,y:42,desc:'South-polar crater-rim reference region',profile:'A south-polar rim reference area near de Gerlache. Terrain hazards and Earth visibility require local elevation and ephemeris data.',focus:'Crater rim hazards, Earth visibility and safe-area extent'}
+];
+let selected=0, audioCtx=null, ambience=null, moonRotation=0;
+const $=id=>document.getElementById(id);
+function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',3200)}
+function mapMarkup(target){$(target).innerHTML=sites.map((s,i)=>`<button class="map-marker ${i===selected?'selected':''}" style="left:${s.x}%;top:${s.y}%" data-site="${i}" title="${s.name}"></button><span class="map-label" style="left:calc(${s.x}% + 13px);top:calc(${s.y}% - 8px)">${s.short}</span>`).join('');$(target).querySelectorAll('[data-site]').forEach(b=>b.addEventListener('click',()=>selectSite(+b.dataset.site)))}
+function renderCards(){$('siteCards').innerHTML=sites.map((s,i)=>`<div class="card site-card"><div class="site-number">CANDIDATE 0${i+1}</div><h3>${s.name}</h3><div class="coords">LAT ${s.lat.toFixed(2)}° · LON ${s.lon.toFixed(2)}°<br>${s.desc}</div><div class="data-row" style="margin-top:12px"><span>Elevation / illumination</span><strong>Dataset required</strong></div><div class="data-row"><span>Landing suitability</span><strong>Not calculated</strong></div><button class="btn secondary" style="margin-top:12px;width:100%" data-open-site="${i}">INSPECT REGION →</button></div>`).join('');document.querySelectorAll('[data-open-site]').forEach(b=>b.addEventListener('click',()=>{selectSite(+b.dataset.openSite);showPage('explorer')}))}
+function selectSite(i){selected=i;$('explorerSelect').value=String(i);updateExplorer();mapMarkup('dashboardMap');mapMarkup('explorerMap');const globe=document.querySelector('.moon-ball');if(globe){globe.classList.remove('site-zoom');void globe.offsetWidth;globe.classList.add('site-zoom')}const map=$('explorerMap');if(map){map.classList.remove('site-zoom');void map.offsetWidth;map.classList.add('site-zoom')}toast('Target locked: '+sites[i].short+' · rotating to selected region')}
+function updateExplorer(){const s=sites[selected];$('explorerName').textContent=s.name;$('latValue').textContent=s.lat.toFixed(3)+'°';$('lonValue').textContent=s.lon.toFixed(3)+'°';if($('siteProfile'))$('siteProfile').textContent=s.profile+' Focus: '+s.focus+'.'}
+
+const pageTransforms = {
+  dashboard: { transform: 'scale(1.02) translate(0px, 0px)', label: 'STAGE II SEPARATION // TLI CORRIDOR · ALT: 185 KM' },
+  explorer: { transform: 'scale(1.04) translate(-14px, -6px)', label: 'REGIONAL RADAR // TARGET VECTOR LOCK' },
+  solar: { transform: 'scale(1.05) translate(12px, -18px)', label: 'SOLAR VECTOR // IRRADIANCE MATRIX · 1361 W/m²' },
+  communication: { transform: 'scale(1.03) translate(0px, 15px)', label: 'DIRECT-TO-EARTH LINK // DEEP SPACE NETWORK' },
+  terrain: { transform: 'scale(1.04) translate(-16px, 10px)', label: 'SURFACE HAZARD PROFILE // LOLA TELEMETRY' },
+  comparison: { transform: 'scale(1.02) translate(8px, 6px)', label: 'MULTI-SITE MATRIX // EVIDENCE SCREENING' },
+  recommendation: { transform: 'scale(1.05) translate(0px, -10px)', label: 'DECISION SUPPORT // WEIGHTED FEASIBILITY' },
+  visualization: { transform: 'scale(1.06) translate(-8px, 2px)', label: 'ORBITAL RECON // 3D SCHEMATIC' }
+};
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+name));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
+  $('crumb').textContent=name.replaceAll('-',' ').toUpperCase();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='visualization')drawMoon();
+  
+  const backdropImg=$('backdropImg');
+  const telemetrySub=$('telemetrySub');
+  if(pageTransforms[name]){
+    if(backdropImg) backdropImg.style.transform = pageTransforms[name].transform;
+    if(telemetrySub) telemetrySub.textContent = pageTransforms[name].label;
+  }
+}
+
+// Background Mode Controller
+const bgModes = [
+  { name: 'VIVID', opacity: '0.48', desc: 'Balanced contrast & telemetry' },
+  { name: 'CINEMA', opacity: '0.75', desc: 'High drama space immersion' },
+  { name: 'SUBTLE', opacity: '0.24', desc: 'Subtle atmospheric tint' },
+  { name: 'MINIMAL', opacity: '0.08', desc: 'Dark console focus' }
+];
+let bgModeIndex = 0;
+const bgModeBtn = $('bgModeBtn');
+if (bgModeBtn) {
+  bgModeBtn.addEventListener('click', () => {
+    bgModeIndex = (bgModeIndex + 1) % bgModes.length;
+    const m = bgModes[bgModeIndex];
+    document.documentElement.style.setProperty('--backdrop-opacity', m.opacity);
+    $('bgModeText').textContent = m.name;
+    toast(`Space Backdrop: ${m.name} mode (${m.desc})`);
+  });
+}
+
+$('nav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)showPage(b.dataset.page)});document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.go)));
+$('explorerSelect').innerHTML=sites.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');$('explorerSelect').addEventListener('change',e=>selectSite(+e.target.value));
+renderCards();mapMarkup('dashboardMap');mapMarkup('explorerMap');updateExplorer();function renderComparison(){const rows=['Coordinates','Elevation','Solar illumination','Sunlight duration','Darkness duration','Solar energy generation','Earth visibility','Communication availability','Surface slope','Surface roughness','Crater hazards','Safe landing area','Surface temperature','Thermal suitability','Mission feasibility'];$('comparisonRows').innerHTML=rows.map((r,i)=>`<tr><td>${r}</td>${sites.map(s=>`<td class="mono">${i===0?`${s.lat.toFixed(2)}°, ${s.lon.toFixed(2)}°`:'Not available'}</td>`).join('')}</tr>`).join('')}renderComparison();
+function calcSolar(){const elev=+ $('solarElev').value,day=+$('dayHours').value,period=+$('periodHours').value,area=+$('panelArea').value,eff=+$('panelEff').value/100,batt=+$('battery').value;if([elev,day,period,area,eff,batt].some(v=>!Number.isFinite(v))||day>period||day<0||period<=0||area<0||eff<0||eff>1){toast('Check solar inputs and ensure daylight does not exceed the mission period.');return}const irradiance=1361*Math.max(0,Math.sin(elev*Math.PI/180)),power=irradiance*area*eff,energy=power*day,dark=period-day; $('solarPower').textContent=power.toFixed(1);$('solarEnergy').textContent=energy.toFixed(0);$('darkHours').textContent=dark.toFixed(1);$('batteryNeed').textContent=(batt).toFixed(0);drawBars('solarChart',[{label:'Generated energy',v:energy},{label:'Battery capacity',v:batt},{label:'Dark period (h)',v:dark}],['#59e1f2','#a68bff','#ffc875']);}
+function calcComm(){const d=+$('distance').value,e=+$('earthElev').value,min=+$('minEarthElev').value;if(d<0||!Number.isFinite(d)||e<-90||e>90||min<0||min>90){toast('Enter valid communication geometry inputs.');return}const delay=d/299792.458,visible=e>=min;$('oneWay').textContent=delay.toFixed(3);$('roundTrip').textContent=(2*delay).toFixed(3);$('earthStatus').textContent=visible?'PASS':'BELOW';$('earthStatus').style.color=visible?'var(--green)':'var(--amber)';$('commWindow').textContent='Unknown';drawBars('commChart',[{label:'Elevation',v:Math.max(0,e)},{label:'Minimum',v:min},{label:'90°',v:90}],['#59e1f2','#ffc875','#5b8cff']);}
+function calcTerrain(){const sl=+$('slope').value,rough=+$('roughness').value,haz=+$('hazards').value,area=+$('safeArea').value,temp=+$('temperature').value,max=+$('maxSlope').value;if([sl,rough,haz,area,temp,max].some(v=>!Number.isFinite(v))||sl<0||sl>90||rough<0||rough>1||haz<0||haz>100||area<0||temp<0||max<0){toast('Check terrain input ranges.');return}$('terrainStatus').textContent=sl<=max?'SLOPE SCREEN PASS':'SLOPE SCREEN FAIL';$('terrainStatus').style.color=sl<=max?'var(--green)':'var(--red)';$('terrainArea').textContent=area+' km²';$('terrainRough').textContent=rough.toFixed(2);$('terrainHazard').textContent=haz+'%';$('terrainTemp').textContent=temp+' K';}
+$('calcSolar').addEventListener('click',()=>{const overlay=$('rocketOverlay');overlay.classList.add('show');$('rocketStatus').textContent='DEPLOYING SOLAR ARRAY // CALCULATING ENERGY BUDGET';$('calcSolar').disabled=true;setTimeout(()=>{calcSolar();overlay.classList.remove('show');$('calcSolar').disabled=false;toast('Solar deployment complete. Results are based on your inputs.')},3600)});$('calcComm').addEventListener('click',calcComm);$('calcTerrain').addEventListener('click',calcTerrain);
+function drawBars(id,items,colors){const c=$(id),ctx=c.getContext('2d'),w=c.clientWidth||500,h=c.clientHeight||210,dpr=devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);const max=Math.max(1,...items.map(x=>x.v));items.forEach((it,i)=>{const y=25+i*55;ctx.fillStyle='#91a5bf';ctx.font='10px DM Mono';ctx.fillText(it.label,4,y);ctx.fillStyle='#ffffff12';ctx.fillRect(130,y-10,w-155,12);ctx.fillStyle=colors[i];ctx.fillRect(130,y-10,(w-155)*it.v/max,12);ctx.fillStyle='#edf5ff';ctx.fillText(Number(it.v).toFixed(1),Math.min(w-35,135+(w-155)*it.v/max),y+18)})}
+function runRecommendation(){const ids=['wSolar','wComm','wSlope','wRough','wHazard','wThermal'],weights=ids.map(id=>+$(id).value);if(weights.some(v=>!Number.isFinite(v)||v<0)||weights.reduce((a,b)=>a+b,0)<=0){toast('Enter non-negative weights with a total greater than zero.');return} $('recommendationOutput').innerHTML='<strong style="color:var(--amber)">RANKING WITHHELD</strong><p style="line-height:1.7">The scoring engine is ready, but comparable verified inputs for solar availability, communication, slope, roughness, hazards and thermal suitability have not been loaded for all five regions. Critical slope and hazard safety gates cannot be checked.</p><p>Next step: import a documented dataset for each site. The engine will normalize the weights and rank only sites with complete evidence that pass the safety gates.</p>';toast('No ranking produced: scientific inputs are missing.');}
+$('runRecommendation').addEventListener('click',runRecommendation);
+function drawMoon(){const c=$('lunarCanvas');if(!c)return;const ctx=c.getContext('2d'),w=c.clientWidth||500,h=c.clientHeight||330,dpr=devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);ctx.fillStyle='#07111f';ctx.fillRect(0,0,w,h);const cx=w/2,cy=h/2+8,r=Math.min(w*.34,h*.42);let grad=ctx.createRadialGradient(cx-r*.35,cy-r*.4,r*.1,cx,cy,r*1.1);grad.addColorStop(0,'#d5d7d4');grad.addColorStop(.55,'#777f8b');grad.addColorStop(1,'#252f40');ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();if($('layerCraters').checked){for(let i=0;i<26;i++){let a=i*2.399+moonRotation,rr=r*Math.sqrt((i*17%27)/30),x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr*.72,cr=3+(i*7%12);ctx.beginPath();ctx.ellipse(x,y,cr,cr*.65,a,0,Math.PI*2);ctx.fillStyle='#29334255';ctx.fill();ctx.strokeStyle='#e2e5e344';ctx.stroke()}}if($('layerGrid').checked){ctx.strokeStyle='#a7d9ed28';ctx.lineWidth=1;for(let k=-2;k<=2;k++){ctx.beginPath();ctx.ellipse(cx,cy,r*.94,Math.abs(k)*r*.17+r*.12,0,0,Math.PI*2);ctx.stroke()}}if($('layerLight').checked){ctx.fillStyle='#b9efff22';ctx.beginPath();ctx.arc(cx-r*.18,cy-r*.18,r*.95,-Math.PI*.9,Math.PI*.9);ctx.lineTo(cx,cy);ctx.fill()}if($('layerMarkers').checked){sites.forEach((s,i)=>{let x=cx+(s.x-50)*r*.012,y=cy+(s.y-50)*r*.009;ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle=i===selected?'#ffc875':'#59e1f2';ctx.fill();ctx.fillStyle='#fff';ctx.font='9px DM Mono';ctx.fillText(s.short,x+9,y-7)})}ctx.fillStyle='#91a5bf';ctx.font='9px DM Mono';ctx.fillText('ILLUSTRATIVE LUNAR GLOBE · NOT TO SCALE',12,h-12)}
+['layerMarkers','layerCraters','layerGrid','layerLight'].forEach(id=>$(id).addEventListener('change',drawMoon));$('rotateMoon').addEventListener('click',()=>{moonRotation+=.35;drawMoon()});$('resetMoon').addEventListener('click',()=>{moonRotation=0;drawMoon()});window.addEventListener('resize',()=>{drawMoon();if($('solarChart')){}});
+function starfield(canvasId){const c=$(canvasId);if(!c)return;const ctx=c.getContext('2d');function paint(){let w=c.clientWidth,h=c.clientHeight,dpr=devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);for(let i=0;i<170;i++){let x=(i*97.31)%w,y=(i*53.77)%h,r=(i%5===0)?1.4:.65;ctx.fillStyle=`rgba(210,230,255,${.18+(i%7)/10})`;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}}paint();return paint}
+starfield('introStars');starfield('heroStars');drawMoon();
+const solarScene=$('solarScene');let dragX=0,dragY=0,rotX=0,rotY=0,dragging=false;
+solarScene.addEventListener('pointerdown',e=>{dragging=true;dragX=e.clientX;dragY=e.clientY;solarScene.setPointerCapture(e.pointerId)});
+solarScene.addEventListener('pointermove',e=>{if(!dragging)return;rotY+=(e.clientX-dragX)*.35;rotX-=(e.clientY-dragY)*.22;dragX=e.clientX;dragY=e.clientY;solarScene.style.transform=`rotateX(${rotX}deg) rotateY(${rotY}deg)`});
+solarScene.addEventListener('pointerup',()=>dragging=false);solarScene.addEventListener('pointercancel',()=>dragging=false);
+let soundEnabled=false;
+function speak(){if(!soundEnabled||!('speechSynthesis'in window))return;const u=new SpeechSynthesisUtterance('Welcome to NASA Moon Trek. Explore the lunar surface, analyse potential landing locations, and discover the most suitable destination for future lunar exploration missions. Your journey into the Moon begins now.');u.rate=.9;u.pitch=1.05;speechSynthesis.cancel();speechSynthesis.speak(u)}
+soundEnabled=true;
+function startAmbience(){try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();if(ambience)return;const master=audioCtx.createGain();master.gain.value=.045;master.connect(audioCtx.destination);const oscs=[];[41.2,55,82.4].forEach((hz,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain(),f=audioCtx.createBiquadFilter();o.type=i===2?'triangle':'sine';o.frequency.value=hz;f.type='lowpass';f.frequency.value=220;g.gain.value=i===0?.5:i===1?.28:.12;o.connect(f);f.connect(g);g.connect(master);o.start();oscs.push(o)});ambience={oscs,master}}catch(e){toast('Audio is unavailable in this browser.')}}function stopAmbience(){if(ambience){ambience.master.gain.setTargetAtTime(0,audioCtx.currentTime,.1);ambience.oscs.forEach(o=>o.stop(audioCtx.currentTime+.5));ambience=null}}
+$('musicToggle').addEventListener('click',()=>{if(ambience)stopAmbience();else startAmbience()});
+function enterApp(){if('speechSynthesis'in window)speechSynthesis.cancel();$('intro').classList.add('hide');$('app').style.display='block';showPage('dashboard');startAmbience()}
+$('startBtn').addEventListener('click',()=>{startAmbience();$('introStage').textContent='LUNAR TRANSFER // APPROACHING SOUTH POLAR ORBIT';$('introTitle').textContent='ENTER THE FRONTIER';$('solarScene').style.transform='scale(2.6) rotateY(28deg)';setTimeout(enterApp,1500)});$('helpBtn').addEventListener('click',()=>toast('Standalone frontend demo. Scientific datasets are not bundled or verified.'));
+</script>
+
+<script>
+(()=>{
+ const canvas=document.getElementById('introStars');
+ if(!canvas)return;
+ const ctx=canvas.getContext('2d');
+ let w=0,h=0,stars=[],shooters=[],raf=0;
+ function resize(){
+   const dpr=Math.min(devicePixelRatio||1,2);
+   w=canvas.clientWidth;h=canvas.clientHeight;
+   canvas.width=w*dpr;canvas.height=h*dpr;
+   ctx.setTransform(dpr,0,0,dpr,0,0);
+   stars=Array.from({length:Math.min(260,Math.floor(w*h/4200))},()=>({
+     x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.35+.25,
+     a:Math.random()*.65+.2,s:Math.random()*.012+.002,p:Math.random()*6.28
+   }));
+ }
+ function frame(t){
+   ctx.clearRect(0,0,w,h);
+   for(const s of stars){
+     s.p+=s.s;
+     ctx.globalAlpha=s.a*(.65+.35*Math.sin(s.p));
+     ctx.fillStyle='#d8f4ff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+   }
+   if(Math.random()<.012&&shooters.length<2)shooters.push({x:Math.random()*w*.8,y:Math.random()*h*.45,v:7+Math.random()*5,l:55+Math.random()*70});
+   shooters.forEach(s=>{ctx.globalAlpha=.8;ctx.strokeStyle='#b9edff';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-s.l,s.y-s.l*.34);ctx.stroke();s.x+=s.v;s.y+=s.v*.34;s.l*=.985});
+   shooters=shooters.filter(s=>s.x<w+100);
+   ctx.globalAlpha=1;
+   raf=requestAnimationFrame(frame);
+ }
+ resize();frame(0);window.addEventListener('resize',resize);
+ const intro=document.querySelector('.intro-content');
+ window.addEventListener('pointermove',e=>{
+   if(!intro||document.getElementById('intro').classList.contains('hide'))return;
+   const dx=(e.clientX/innerWidth-.5)*8,dy=(e.clientY/innerHeight-.5)*8;
+   intro.style.transform=`translate(${dx}px,${dy}px)`;
+ });
+})();
+</script>
+
+</body>
+</html>
