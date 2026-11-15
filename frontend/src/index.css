@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-primary: #030712;
+    --color-bg-secondary: #081126;
+    --color-border-glow: #00f5d4;
+  }
+
+  body {
+    background-color: #030712;
+    color: #e2e8f0;
+    font-family: 'Rajdhani', 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: 'Chakra Petch', sans-serif;
+    letter-spacing: 0.05em;
+  }
+
+  .font-telemetry {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom Aerospace Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050b1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e3d7b;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00d2ff;
+}
+
+/* Glassmorphism aerospace panel */
+.hud-panel {
+  background: rgba(8, 17, 38, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 210, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 5, 20, 0.5);
+  position: relative;
+}
+
+.hud-panel-active {
+  border-color: rgba(0, 245, 212, 0.5);
+  box-shadow: 0 0 25px -5px rgba(0, 245, 212, 0.25), inset 0 0 15px -5px rgba(0, 245, 212, 0.15);
+}
+
+/* Corner bracket accents */
+.corner-brackets {
+  position: relative;
+}
+.corner-brackets::before,
+.corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+.corner-brackets::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid #00f5d4;
+  border-left: 2px solid #00f5d4;
+}
+.corner-brackets::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid #00f5d4;
+  border-right: 2px solid #00f5d4;
+}
+
+/* Glowing text */
+.glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 245, 212, 0.6), 0 0 20px rgba(0, 245, 212, 0.2);
+}
+
+.glow-blue {
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.6), 0 0 20px rgba(0, 210, 255, 0.2);
+}
+
+.glow-amber {
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+/* Grid overlay background */
+.space-grid-bg {
+  background-image: 
+    linear-gradient(rgba(0, 210, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Radar pulse animation */
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 4s linear infinite;
+}
+
+@keyframes ping-slow {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 2.5s ease-in-out infinite;
+}
