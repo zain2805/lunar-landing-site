@@ -1,0 +1,13 @@
+waypoint_id,name,type,latitude_deg,longitude_deg,polar_x_m,polar_y_m,elevation_m
+WP_MALAPERT_SUMMIT,Malapert Massif Summit,Candidate Landing Site,-85.9,0.0,0.0,-124360.0,5120.0
+WP_MALAPERT_BENCH,Malapert Northern Bench,Candidate Landing Site,-85.75,1.2,2700.0,-128900.0,4780.0
+WP_MONS_MOUTON_A,Mons Mouton Mesa Center,Candidate Landing Site,-84.5,-31.0,-86014.0,-143149.0,5420.0
+WP_MONS_MOUTON_PLATEAU,Mons Mouton Step Plateau,Candidate Landing Site,-85.35,-33.0,-76786.0,-118245.0,4950.0
+WP_HAWORTH_RIM,Haworth Crater North Rim,Candidate Landing Site,-87.5,-5.0,-6610.0,-75560.0,1250.0
+WP_NOBILE_RIM_1,Nobile Crater East Rim,Candidate Landing Site,-85.2,53.5,117140.0,-86630.0,3650.0
+WP_NOBILE_RIM_2,Nobile Crater South Rim,Candidate Landing Site,-85.8,47.0,93020.0,-86750.0,3480.0
+WP_DE_GERLACHE_RIM,de Gerlache Connecting Ridge,Candidate Landing Site,-88.3,-68.5,-47930.0,-18870.0,2840.0
+WP_SLATER_PLAIN,Slater Smooth Plain,Candidate Landing Site,-88.1,115.0,52180.0,24330.0,860.0
+WP_CABEUS_COLDTRAP,Cabeus Water Ice Trap,Science Target (PSR),-84.9,-35.5,-90200.0,-129400.0,-3900.0
+WP_SHACKLETON_RIM,Shackleton Crater Summit Peak,Science Target,-89.9,0.0,0.0,-3030.0,4200.0
+WP_HAWORTH_PSR_FLOOR,Haworth Deep Cryogenic Floor,Science Target (PSR),-87.4,-5.1,-6740.0,-78600.0,-3800.0
