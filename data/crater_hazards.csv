@@ -1,0 +1,7 @@
+crater_id,name,local_x_m,local_y_m,diameter_m,depth_m,rim_slope_deg,hazard_safety_radius_m
+HAZ_CRATER_LOCAL_1,Local Impact Crater Alpha,175.0,75.0,24.0,3.8,18.5,16.0
+HAZ_CRATER_LOCAL_2,Local Impact Crater Beta,60.0,190.0,16.0,2.5,14.2,12.0
+HAZ_SHACKLETON,Shackleton Crater,0.0,-3030.0,21000.0,4200.0,32.0,11500.0
+HAZ_HAWORTH,Haworth Crater,-6610.0,-75560.0,35000.0,3800.0,28.0,18500.0
+HAZ_CABEUS,Cabeus Crater,-90200.0,-129400.0,100000.0,4100.0,26.5,52000.0
+HAZ_FAUSTINI,Faustini Crater,79800.0,-17800.0,39000.0,3200.0,24.0,21000.0
