@@ -1,0 +1,7 @@
+# Lunar Landing Site Navigator - Requirements
+# The core backend runs on standard Python 3.8+ with ZERO external dependencies!
+# Optional packages for developers extending the API:
+requests>=2.28.0
+numpy>=1.22.0
+fastapi>=0.95.0
+uvicorn>=0.20.0
