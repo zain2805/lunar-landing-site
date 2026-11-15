@@ -1,0 +1,77 @@
+{
+  "hazard_definition": "Slope > 12 deg or within hazard_safety_radius",
+  "craters": [
+    {
+      "crater_id": "HAZ_CRATER_LOCAL_1",
+      "name": "Local Impact Crater Alpha",
+      "center_grid_row": 15,
+      "center_grid_col": 35,
+      "local_x_m": 175.0,
+      "local_y_m": 75.0,
+      "diameter_m": 24.0,
+      "depth_m": 3.8,
+      "rim_slope_deg": 18.5,
+      "hazard_safety_radius_m": 16.0
+    },
+    {
+      "crater_id": "HAZ_CRATER_LOCAL_2",
+      "name": "Local Impact Crater Beta",
+      "center_grid_row": 38,
+      "center_grid_col": 12,
+      "local_x_m": 60.0,
+      "local_y_m": 190.0,
+      "diameter_m": 16.0,
+      "depth_m": 2.5,
+      "rim_slope_deg": 14.2,
+      "hazard_safety_radius_m": 12.0
+    },
+    {
+      "crater_id": "HAZ_SHACKLETON",
+      "name": "Shackleton Crater",
+      "center_grid_row": -1,
+      "center_grid_col": -1,
+      "local_x_m": 0.0,
+      "local_y_m": -3030.0,
+      "diameter_m": 21000.0,
+      "depth_m": 4200.0,
+      "rim_slope_deg": 32.0,
+      "hazard_safety_radius_m": 11500.0
+    },
+    {
+      "crater_id": "HAZ_HAWORTH",
+      "name": "Haworth Crater",
+      "center_grid_row": -1,
+      "center_grid_col": -1,
+      "local_x_m": -6610.0,
+      "local_y_m": -75560.0,
+      "diameter_m": 35000.0,
+      "depth_m": 3800.0,
+      "rim_slope_deg": 28.0,
+      "hazard_safety_radius_m": 18500.0
+    },
+    {
+      "crater_id": "HAZ_CABEUS",
+      "name": "Cabeus Crater",
+      "center_grid_row": -1,
+      "center_grid_col": -1,
+      "local_x_m": -90200.0,
+      "local_y_m": -129400.0,
+      "diameter_m": 100000.0,
+      "depth_m": 4100.0,
+      "rim_slope_deg": 26.5,
+      "hazard_safety_radius_m": 52000.0
+    },
+    {
+      "crater_id": "HAZ_FAUSTINI",
+      "name": "Faustini Crater",
+      "center_grid_row": -1,
+      "center_grid_col": -1,
+      "local_x_m": 79800.0,
+      "local_y_m": -17800.0,
+      "diameter_m": 39000.0,
+      "depth_m": 3200.0,
+      "rim_slope_deg": 24.0,
+      "hazard_safety_radius_m": 21000.0
+    }
+  ]
+}
