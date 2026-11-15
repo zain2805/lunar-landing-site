@@ -1,0 +1,2 @@
+# Vercel Python Serverless Deployment
+# Runs with standard library!
