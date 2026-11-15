@@ -1,0 +1,91 @@
+{
+  "constants": {
+    "lunar_mean_radius_m": 1737400.0,
+    "grid_cell_size_m": 5.0,
+    "solar_constant_w_m2": 1361.0
+  },
+  "calculation_1_elevation": {
+    "datum": "Reference sphere of radius 1737400.0 m",
+    "units": "meters",
+    "interpolation_method": "bilinear"
+  },
+  "calculation_2_slope": {
+    "formula": "Horn 3x3 convolution: slope = atan(sqrt((dz/dx)^2 + (dz/dy)^2))",
+    "flat_terrain_max_deg": 5.0,
+    "moderate_slope_max_deg": 8.0,
+    "steep_slope_threshold_deg": 10.0,
+    "critical_abort_slope_deg": 12.0
+  },
+  "calculation_3_roughness": {
+    "formula": "Terrain Roughness Index (TRI) = mean(|z_center - z_neighbor_i|) for i=1..8",
+    "smooth_tri_max_m": 0.3,
+    "moderate_tri_max_m": 0.8,
+    "rough_hazard_tri_m": 1.2
+  },
+  "calculation_4_landing_safety_score": {
+    "formula": "Score = SafetyMask * (w_slope * S_slope + w_rough * S_rough + w_illum * S_illum + w_hazard * S_hazard)",
+    "weights": {
+      "weight_slope": 0.35,
+      "weight_roughness": 0.2,
+      "weight_illumination": 0.25,
+      "weight_hazard_avoidance": 0.2
+    },
+    "score_range": [
+      0.0,
+      1.0
+    ],
+    "ranking_classes": {
+      "optimal": [
+        0.8,
+        1.0
+      ],
+      "acceptable": [
+        0.6,
+        0.79
+      ],
+      "marginal": [
+        0.4,
+        0.59
+      ],
+      "hazardous": [
+        0.0,
+        0.39
+      ]
+    }
+  },
+  "calculation_5_distance": {
+    "methods": [
+      {
+        "name": "haversine_great_circle",
+        "formula": "2 * R * asin(sqrt(sin^2(dLat/2) + cos(Lat1)*cos(Lat2)*sin^2(dLon/2)))"
+      },
+      {
+        "name": "euclidean_2d_polar_stereo",
+        "formula": "sqrt((x2-x1)^2 + (y2-y1)^2)"
+      },
+      {
+        "name": "euclidean_3d_surface",
+        "formula": "sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)"
+      }
+    ]
+  },
+  "calculation_6_navigation_path": {
+    "algorithm": "A* (A-Star) Grid Pathfinding",
+    "rover_max_traversable_slope_deg": 15.0,
+    "cost_function": "Cost(A->B) = EuclideanDist * (1.0 + 3.0 * (Slope / 15.0)^2)",
+    "hazard_penalty": "Infinity (Non-traversable obstacle)"
+  },
+  "calculation_7_sunlight_illumination": {
+    "minimum_solar_elevation_deg": 0.2,
+    "shadow_raytrace_step_m": 5.0,
+    "incidence_angle_formula": "cos(theta_inc) = cos(Slope)*sin(SunElev) + sin(Slope)*cos(SunElev)*cos(SunAzimuth - Aspect)"
+  },
+  "calculation_8_hazard_detection": {
+    "crater_detection_rules": [
+      "Local elevation depression relative to mean neighborhood (depth > 1.5 m)",
+      "Slope reversal from rim (>12 deg) to floor",
+      "Proximity within crater hazard_safety_radius_m"
+    ],
+    "hazard_mask_flag": 1
+  }
+}
